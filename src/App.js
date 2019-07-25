@@ -8,7 +8,7 @@ import LoadMoreList from './MyList';
 import MailContent from './MailContent';
 import Compose from './Compose';
 
-const { Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 
 
