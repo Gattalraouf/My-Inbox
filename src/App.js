@@ -1,59 +1,86 @@
 import React from 'react';
 import './App.css';
 import 'antd/dist/antd.css';
-import { Layout, Menu, Icon } from 'antd';
 
-const { Header, Content, Footer, Sider } = Layout;
+import { Layout } from 'antd';
+import MySider from './MySider.js';
+import LoadMoreList from './MyList';
+import MailContent from './MailContent';
+import Compose from './Compose';
+
+const { Content, Footer, Sider } = Layout;
 
 
 
-function App() {
-  return (
-    <Layout>
+class App extends React.Component {
 
-      <Sider
-        style={{
-          overflow: 'auto',
-          height: '100vh',
-          position: 'fixed',
-          left: 0,
-        }}
-      >
-        <div className="logo" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1">
-            <Icon type="inbox" />
-            <span className="nav-text">Inbox</span>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <Icon type="form" />
-            <span className="nav-text">Drafts</span>
-          </Menu.Item>
-          <Menu.Item key="3">
-            <Icon type="select" />
-            <span className="nav-text">Sent</span>
-          </Menu.Item>
-          <Menu.Item key="4">
-            <Icon type="delete" />
-            <span className="nav-text">Trash</span>
-          </Menu.Item>
-        </Menu>
-      </Sider>
+  constructor(props) {
+    super(props);
 
-      <Layout style={{ marginLeft: 200 }}>
-        <Header style={{ background: '#fff', padding: 0 }} />
+    this.state = {
+      menuItem: 1,
+      compose: false,
+      threadId:""
+    };
+    this.menuChoice = this.menuChoice.bind(this)
+    this.composeEmail = this.composeEmail.bind(this)
+    this.cancel = this.cancel.bind(this)
+    this.choseThread=this.choseThread.bind(this)
+  }
 
-        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <div style={{ padding: 24, background: '#fff', textAlign: 'center' }}>
-            content
-          </div>
-        </Content>
+  menuChoice(id) {
+    console.log(id)
+    this.setState({
+      menuItem: id
+    });
+  }
 
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
-      </Layout>
+  composeEmail() {
+    this.setState({
+      compose: true
+    });
+  }
+
+  cancel() {
+    this.setState({
+      compose: false
+    });
+  }
+
+  choseThread(id){
+    console.log(id)
+    this.setState({
+      threadId: id
+    });
+  }
+
+  render() {
+    return (
+      <Layout>
+
+        <Compose compose={this.state.compose} cancel={this.cancel} />
+
+        <MySider action={this.menuChoice} composer={this.composeEmail} />
+
+        <Layout className="MainScreen" style={{ marginLeft: 200 }}>
+
+          <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+            <div style={{ padding: 24, background: '#fff', textAlign: 'center' }}>
+              <Layout style={{ padding: '24px 0', background: '#fff' }}>
+                <Sider width={600} style={{ background: '#fff' }}>
+                  <LoadMoreList action={this.choseThread}/>
+                </Sider>
+                {this.state.threadId!=="" && <MailContent id={this.state.threadId} />}
+              </Layout>
+            </div>
+          </Content>
+
     
-    </Layout>
-  );
+        </Layout>
+
+      </Layout >
+    );
+  }
 }
 
 export default App;
